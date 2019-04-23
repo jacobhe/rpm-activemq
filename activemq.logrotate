@@ -1,0 +1,7 @@
+/opt/activemq/data/activemq.log {
+  copytruncate
+  daily
+  rotate 365
+  compress
+  missingok
+}
