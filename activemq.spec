@@ -22,7 +22,6 @@ Source0:    apache-activemq-%{version}.tar.gz
 Source1:    %{name}.service
 Source2:    %{name}.logrotate
 BuildRequires:    systemd-units
-Requires:   jpackage-utils
 Requires(pre): shadow-utils
 Requires(post):   systemd-units
 Requires(preun):  systemd-units
