@@ -22,7 +22,7 @@ Source0:    apache-activemq-%{version}.tar.gz
 Source1:    %{name}.service
 Source2:    %{name}.logrotate
 BuildRequires:    systemd-units
-Requires(pre): shadow-utils
+Requires(pre):    shadow-utils
 Requires(post):   systemd-units
 Requires(preun):  systemd-units
 Requires(postun): systemd-units
@@ -48,6 +48,28 @@ cp -R * %{buildroot}/%{activemq_home}/
 # Remove *.bat
 rm -f %{buildroot}/%{activemq_home}/bin/*.bat
 
+# Put conf in /etc/ and link back.
+install -d -m 755 %{buildroot}/%{_sysconfdir}/%{name}/
+mv %{buildroot}/%{activemq_home}/conf/* %{buildroot}/%{_sysconfdir}/%{name}/
+rmdir %{buildroot}/%{activemq_home}/conf/
+cd %{buildroot}/%{activemq_home}
+ln -s %{_sysconfdir}/%{name} conf
+cd -
+
+# Put data in /var/lib and link back.
+install -d -m 755 %{buildroot}/%{_sharedstatedir}/%{name}/
+mv %{buildroot}/%{activemq_home}/data/* %{buildroot}/%{_sharedstatedir}/%{name}/
+rmdir %{buildroot}/%{activemq_home}/data/
+cd %{buildroot}/%{activemq_home}
+ln -s %{_sharedstatedir}/%{name} data
+cd -
+
+# Put tmp to /var/cache and link back.
+install -d -m 775 %{buildroot}/%{_localstatedir}/cache/%{name}/
+cd %{buildroot}/%{activemq_home}
+ln -s %{_localstatedir}/cache/%{name} tmp
+cd -
+
 # Drop service script
 install -d -m 755 %{buildroot}/%{_unitdir}
 install    -m 644 %_sourcedir/%{name}.service %{buildroot}/%{_unitdir}/%{name}.service
@@ -66,9 +88,13 @@ getent passwd %{activemq_user} >/dev/null || /usr/sbin/useradd --comment "Acitve
 %files
 %defattr(-,%{activemq_user},%{activemq_group})
 %{activemq_home}
+%{_sharedstatedir}/%{name}
+%{_localstatedir}/cache/%{name}
+%dir %{_sysconfdir}/%{name}
 %defattr(-,root,root)
 %{_unitdir}/%{name}.service
 %{_sysconfdir}/logrotate.d/%{name}
+%config(noreplace) %attr(600,%{activemq_user},%{activemq_group}) %{_sysconfdir}/%{name}/*
 
 %post
 %systemd_post %{name}.service
