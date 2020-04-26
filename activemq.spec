@@ -14,7 +14,7 @@ Summary:    Apache ActiveMQ
 Name:       activemq
 Version:    5.15.9
 BuildArch:  x86_64
-Release:    1
+Release:    2
 License:    Apache Software License
 Group:      Networking/Daemons
 URL:        http://activemq.apache.org
