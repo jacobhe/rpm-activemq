@@ -14,7 +14,7 @@ Summary:    Apache ActiveMQ
 Name:       activemq
 Version:    5.15.9
 BuildArch:  x86_64
-Release:    2
+Release:    3
 License:    Apache Software License
 Group:      Networking/Daemons
 URL:        http://activemq.apache.org
@@ -47,6 +47,8 @@ cp -R * %{buildroot}/%{activemq_home}/
 
 # Remove *.bat
 rm -f %{buildroot}/%{activemq_home}/bin/*.bat
+# Remove 32bit file
+rm -rf %{buildroot}/%{activemq_home}/bin/linux-x86-32
 
 # Put conf in /etc/ and link back.
 install -d -m 755 %{buildroot}/%{_sysconfdir}/%{name}/
